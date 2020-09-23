@@ -50,7 +50,7 @@ highlight Pmenu ctermbg=8 guibg=#606060
 highlight PmenuSel ctermbg=1 guifg=#dddd00 guibg=#1f82cd
 highlight PmenuSbar ctermbg=0 guibg=#d6d6d6
 hi LineNr ctermfg=green
-" set number                  " add line numbers
+set number                  " add line numbers
 let g:indentLine_setColors = 1
 let g:indentLine_color_term = 1
 let g:indentLine_char = '┊'

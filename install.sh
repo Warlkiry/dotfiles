@@ -3,8 +3,6 @@
 APT_REQUIEREMENTS="tmux neovim python3 python3-pip powerline fonts-powerline"
 PIP_REQUIEREMENTS="neovim"
 
-#Do all sort of stuff...
-
 sudo apt -y install $APT_REQUIEREMENTS
 pip3 install $PIP_REQUIEREMENTS
 
