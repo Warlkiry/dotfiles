@@ -3,75 +3,74 @@ export PROGRESS='-e \n[*]'
 export LISTEL="-e \n---"
 export QUESTION='-e \n\n??>'
 
-ask_question(){
-echo $QUESTION $1
-select result in Yes No cancel
-do
-    break
-done
-case $result in
-    Yes)
-        return 1;
-        ;;
-    No)
-        return 0;
-        ;;
-    cancel)
-        exit 0;
-        ;;
-    *)
-        exit 1;
-        ;;
-esac
-}
-
-ask_question "Install tmux and neovim configuration ?"
-INSTALL_TMUX_NVIM=$?
-ask_question "Install gnome desktop environment ?"
-INSTALL_GNOME_ENV=$?
-ask_question "Install additional softwares ?"
-INSTALL_ADD_SOFT=$?
-ask_question "Install personnal utilities ?"
-INSTALL_PERS_UTILITIES=$?
-ask_question "Install infosec utilities ?"
-INSTALL_INFOSEC_UTILITIES=$?
-
-set -e
-
 if [[ ! -v $STATIC_FILES_DIR ]];then
     export STATIC_FILES_DIR=/usr/share/systemsetup
 fi
-sudo mkdir -p $STATIC_FILES_DIR
 
+install_target(){
+    clear
+    if [ $1 -eq 1 ] ; then
+        echo $INFO "Installing $(echo $3 | sed 's/_/ /')"
+        bash ./$2
+        echo "$3" | sudo tee -a $STATIC_FILES_DIR/installed
+    fi
+}
+
+ask_question(){
+    if [ -f $STATIC_FILES_DIR/installed ] ; then
+        if [ ! -z $(cat $STATIC_FILES_DIR/installed | grep $2) ] ; then
+            return 0;
+        fi
+    fi
+    echo $QUESTION $1
+    select result in Yes No cancel
+    do
+        break
+    done
+    case $result in
+        Yes)
+            return 1;
+            ;;
+        No)
+            return 0;
+            ;;
+        cancel)
+            exit 0;
+            ;;
+        *)
+            exit 1;
+            ;;
+    esac
+}
+
+ask_question "Install tmux and neovim configuration ?" "tmux_and_nvim"
+INSTALL_TMUX_NVIM=$?
+ask_question "Install gnome desktop environment ?" "gnome_desktop_env"
+INSTALL_GNOME_ENV=$?
+ask_question "Install additional softwares ?" "additionnal_software"
+INSTALL_ADD_SOFT=$?
+ask_question "Install personnal utilities ?" "personnal_utilities"
+INSTALL_PERS_UTILITIES=$?
+ask_question "Install infosec utilities ?" "infosec_utilities"
+INSTALL_INFOSEC_UTILITIES=$?
+# echo $INSTALL_TMUX_NVIM $INSTALL_GNOME_ENV $INSTALL_ADD_SOFT $INSTALL_PERS_UTILITIES $INSTALL_INFOSEC_UTILITIES
+
+clear
+set -e
+sudo mkdir -p $STATIC_FILES_DIR
 APT_REQ="git curl python3-pip"
 
-echo "[*] Updating system"
+echo $PROGRESS "Updating system"
 sudo apt update && sudo apt upgrade
 
-echo "[*] Installing dependencies"
+echo $PROGRESS "Installing dependencies"
 sudo apt -y install $APT_REQ
 
-if [ $INSTALL_TMUX_NVIM -eq 1 ] ; then
-    echo $INFO "Installing tmux and neovim environment"
-    bash ./install_tmux_neovim_env.sh
-fi
+install_target $INSTALL_TMUX_NVIM "./install_tmux_neovim_env.sh" "tmux_and_nvim"
+install_target $INSTALL_GNOME_ENV "./install_gnome_env.sh" "gnome_desktop_env"
+install_target $INSTALL_ADD_SOFT "./install_gnome_env.sh" "additionnal_software"
+install_target $INSTALL_PERS_UTILITIES "./install_personnal_utilities.sh" "personnal_utilities"
+install_target $INSTALL_INFOSEC_UTILITIES "./install_infosec_utilities.sh" "infosec_utilities"
 
-if [ $INSTALL_GNOME_ENV -eq 1 ] ; then
-    echo $INFO "Installing gnome desktop environment"
-    bash ./install_gnome_env.sh
-fi
-
-if [ $INSTALL_ADD_SOFT -eq 1 ] ; then
-    echo $INFO "Installing additionnal software environment"
-    bash ./install_additional_softwares.sh
-fi
-
-if [ $INSTALL_PERS_UTILITIES -eq 1 ] ; then
-    echo $INFO "Installing personnal utilities"
-    bash ./install_personnal_utilities.sh
-fi
-
-if [ $INSTALL_INFOSEC_UTILITIES -eq 1 ] ; then
-    echo $INFO "Installing Infosec utilities"
-    bash ./install_infosec_utilities.sh
-fi
+clear
+echo "System ready"

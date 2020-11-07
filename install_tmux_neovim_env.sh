@@ -6,14 +6,12 @@ sudo apt -y install $APT_SOFT
 sudo pip3 install $PIP_SOFT
 
 echo $PROGRESS "Configuring tmux"
-echo "source-file $STATIC_FILES_DIR/tmux_theme" >> ./tmux.conf
 sudo cp ./tmuxtheme $STATIC_FILES_DIR/tmux_theme
 sudo cp ./tmux.conf /etc/tmux.conf
+echo "source-file $STATIC_FILES_DIR/tmux_theme" | sudo tee -a /etc/tmux.conf
 
 echo $PROGRESS "Configuring neovim"
+#TODO   Fix neovim configuration & plugin installation system wide (for root too)
 sudo cp ./config.vim /usr/share/nvim/sysinit.vim
-sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+sudo wget 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' -O /etc/vim/autoload/plug.vim
 nvim --headless +PlugInstall +qa
-
-
