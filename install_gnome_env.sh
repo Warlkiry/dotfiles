@@ -37,3 +37,5 @@ set_theme_opt 'clock-show-weekday' 'true'
 set_theme_opt 'enable-animations' 'true'
 set_theme_opt 'enable-hot-corners' 'false'
 set_theme_opt 'show-battery-percentage' 'false'
+
+gsettings set org.gnome.shell.extensions.dash-to-dock show-show-apps-button true
