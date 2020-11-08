@@ -8,7 +8,7 @@ show-mount=false
 show-trash=false
 
 [nightlightslider]
-brightness-sync=true
+brightness-sync=false
 enable-always=true
 show-always=true
 show-in-submenu=false
