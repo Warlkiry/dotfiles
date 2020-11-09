@@ -43,6 +43,8 @@ ask_question(){
     esac
 }
 
+ask_question "Install alacritty terminal ?" "alacritty_term"
+INSTALL_ALACRITTY=$?
 ask_question "Install tmux and neovim configuration ?" "tmux_and_nvim"
 INSTALL_TMUX_NVIM=$?
 ask_question "Install gnome desktop environment ?" "gnome_desktop_env"
@@ -66,6 +68,7 @@ sudo apt update && sudo apt upgrade
 echo $PROGRESS "Installing dependencies"
 sudo apt -y install $APT_REQ
 
+install_target $INSTALL_ALACRITTY "./install_alacritty.sh" "alacritty_term"
 install_target $INSTALL_TMUX_NVIM "./install_tmux_neovim_env.sh" "tmux_and_nvim"
 install_target $INSTALL_GNOME_ENV "./install_gnome_env.sh" "gnome_desktop_env"
 install_target $INSTALL_ADD_SOFT "./install_gnome_env.sh" "additionnal_software"
