@@ -1,25 +1,16 @@
 call plug#begin()
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+    Plug 'scrooloose/nerdtree'
 
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'
+    Plug 'thaerkh/vim-workspace'
 
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2'
-Plug 'ncm2/ncm2-vim-lsp'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-neoinclude' | Plug 'Shougo/neoinclude.vim'
-Plug 'ncm2/ncm2-syntax' | Plug 'Shougo/neco-syntax'
-
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'scrooloose/nerdtree'
-Plug 'sbdchd/neoformat'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'neomake/neomake'
-
-Plug 'thaerkh/vim-workspace'
-Plug 'majutsushi/tagbar'
+    " TODO Only add in Rust IDE config file
+    Plug 'majutsushi/tagbar'
+    Plug 'vim-syntastic/syntastic'
+    Plug 'rust-lang/rust.vim'
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    Plug 'sebastianmarkow/deoplete-rust'
 call plug#end()
 
 
@@ -40,16 +31,12 @@ set tabstop=4
 set smarttab
 set expandtab
 "set completeopt-=preview
+
+"Command executed when saving
 au BufWritePost * if v:this_session != "" | exe "mksession! ".v:this_session
 
-
-
-
 " INTERFACE
-highlight Pmenu ctermbg=8 guibg=#606060
-highlight PmenuSel ctermbg=1 guifg=#dddd00 guibg=#1f82cd
-highlight PmenuSbar ctermbg=0 guibg=#d6d6d6
-hi LineNr ctermfg=green
+
 set number                  " add line numbers
 let g:indentLine_setColors = 1
 let g:indentLine_color_term = 1
@@ -58,11 +45,58 @@ syntax on
 if has("termguicolors") && has("nvim") " set true colors on NeoVim
     set termguicolors
 endif
+
 set background=dark
+set cursorline
+
+highlight LineNr guifg=#5b4366
+highlight CursorLineNR gui=bold guifg=#b787cc
+highlight CursorLine guibg=#303030
+highlight Pmenu ctermbg=8 guibg=#606060
+highlight PmenuSel ctermbg=1 guifg=#dddd00 guibg=#1f82cd
+highlight PmenuSbar ctermbg=0 guibg=#d6d6d6
+highlight VertSplit gui=NONE guifg=#505050 guibg=NONE
+
+highlight Search guibg=NONE guifg=#ffc453 gui=underline,bold
+highlight QuickFixLine gui=NONE guibg=NONE guifg=#ffc453
+highlight TODO guibg=NONE guifg=#dd5dc4 gui=underline,bold
+
+let g:syntastic_enable_signs = 1
+
+"highlight SpellCap guifg=#ffc453 guibg=#000000 ctermfg=2 ctermbg=5
+
+"highlight Comment        xxx ctermfg=14 guifg=#80a0ff
+"highlight Constant       xxx ctermfg=13 guifg=#ffa0a0
+"highlight Special        xxx ctermfg=224 guifg=Orange
+"highlight Statement      xxx ctermfg=11 gui=bold guifg=#ffff60
+"highlight PreProc        xxx ctermfg=81 guifg=#ff80f
+"highlight Underlined     xxx cterm=underline ctermfg=81 gui=underline guifg=#80a0ff
+"highlight Ignore         xxx ctermfg=0 guifg=bg
+"highlight Todo           xxx ctermfg=0 ctermbg=11 guifg=Blue guibg=Yellow
+"highlight Character      xxx links to Constant
+"highlight Boolean        xxx links to Constant
+"highlight Float          xxx links to Number
+"highlight Function       xxx links to Identifier
+"highlight Conditional    xxx links to Statement
+"highlight Repeat         xxx links to Statement
+"highlight Label          xxx links to Statement
+"highlight Keyword        xxx links to Statement
+"highlight Exception      xxx links to Statement
+"highlight Include        xxx links to PreProc
+"highlight Define         xxx links to PreProc
+"highlight Macro          xxx links to PreProc
+"highlight PreCondit      xxx links to PreProc
+"highlight StorageClass   xxx links to Type
+"highlight Structure      xxx links to Type
+"highlight Typedef        xxx links to Type
+"highlight Tag            xxx links to Special
+"highlight SpecialComment xxx links to Special
 
 
 " KEYBOARD
 let g:mapleader = '$'
+
+nnoremap <leader><Space> :nohlsearch<CR>
 
 nnoremap <leader>d :bnext<CR>
 nnoremap <leader>z :enew<CR>
@@ -74,20 +108,14 @@ nnoremap <leader>r :vsplit<CR>
 nnoremap <leader>t :wincmd o<CR>
 nnoremap <Tab> :NERDTreeToggle<CR>
 
-nnoremap <leader>a :TagbarToggle<CR>
-nnoremap <leader>" :lnext<CR>
-nnoremap <leader>& :lprevious<CR>
+nnoremap <leader>é :set number!<CR>
+
+
+
 
 " LSP
 let g:lsp_fold_enabled = 0
 let g:lsp_diagnostics_enabled = 0         " disable diagnostics support
-
-
-
-" NCM2
-autocmd BufEnter * call ncm2#enable_for_buffer()
-
-
 
 " VIM WORKSPACE (SESSION MANAGER)
 let g:workspace_autosave_always = 1
@@ -104,10 +132,9 @@ let g:airline#extensions#tabline#show_splits = 0
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#neomake#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
-
+let g:airline#extensions#syntastic#enabled = 1
 
 
 " NEOFORMAT (FORMATTING)
@@ -115,11 +142,38 @@ let g:neoformat_basic_format_align = 1
 let g:neoformat_basic_format_retab = 1
 let g:neoformat_basic_format_trim = 1
 
+" Deoplete
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#rust#racer_binary='/home/john/.cargo/bin/racer'
+let g:deoplete#sources#rust#rust_source_path='/home/john/.local/rustsrc/library'
+autocmd filetype rust nmap <buffer> <leader>f <plug>DeopleteRustGoToDefinitionDefault
+autocmd filetype rust nmap <buffer> <leader>& <plug>DeopleteRustShowDocumentation
+
+highlight SyntasticErrorLine guifg=#ff5353 gui=bold
+highlight SyntasticErrorSign guifg=#ff5353 gui=bold
+highlight SyntasticError guifg=#ff5353 guibg=NONE gui=bold
+
+highlight SyntasticWarningLine guifg=#ffc453 gui=italic
+highlight SyntasticWarningSign guifg=#ffc453 gui=italic
+highlight SyntasticWarning guifg=#ffc453 guibg=NONE gui=bold
+
+"Syntastic configuration
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+
+" Tagbar
+let g:tagbar_autofocus = 1
+let g:tagbar_autoclose = 1
+
+let g:syntastic_mode_map = {
+    \ "mode": "passive",
+    \ "active_filetypes": ["python", "ruby", "php", "rust", "c", "bash", "c++"],
+    \ "passive_filetypes": ["puppet"] }
 
 
-" NEOMAKE (CODE CHECKING)
-let g:neomake_highlight_columns = 0
-highlight NeomakeWarningSign guifg=#ff9932
-call neomake#configure#automake('w')
-" hi NeomakeVirtualtextError ctermbg=234 ctermfg=238 guibg=
-hi NeomakeVirtualtextWarning guifg=#512866
