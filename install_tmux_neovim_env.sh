@@ -10,15 +10,20 @@ sudo cp ./tmuxtheme $STATIC_FILES_DIR/tmux_theme
 sudo cp ./tmux.conf /etc/tmux.conf
 echo "source-file $STATIC_FILES_DIR/tmux_theme" | sudo tee -a /etc/tmux.conf
 
-#TODO   TEST IF DO IDE INSTALLATIONS HERE
-#           And call installation scripts if needed
-
 #       IDE COMMANDS
 #           <leader>f   Go to declaration
 #           <leader>&   Documentation
 
 echo $PROGRESS "Configuring neovim"
+
+cp ./common_vimplugs ./vim_plugs
+cp ./common_config.vim ./config.vim
+
 #TODO   Fix neovim configuration & plugin installation system wide (for root too)
-sudo cp ./config.vim /usr/share/nvim/sysinit.vim
+echo -e "call plug#begin()\n$(cat ./vim_plugs)\ncall plug#end()\n$(cat ./config.vim)" > ./config.vim
+
+sudo mv ./config.vim /usr/share/nvim/sysinit.vim
+rm ./vim_plugs
 sudo wget 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' -O /usr/share/nvim/runtime/autoload/plug.vim
 nvim --headless +PlugInstall +qa
+

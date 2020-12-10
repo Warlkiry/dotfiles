@@ -47,6 +47,18 @@ ask_question "Install alacritty terminal ?" "alacritty_term"
 INSTALL_ALACRITTY=$?
 ask_question "Install tmux and neovim configuration ?" "tmux_and_nvim"
 INSTALL_TMUX_NVIM=$?
+
+INSTALL_C_IDE=0
+INSTALL_PYTHON_IDE=0
+INSTALL_RUST_IDE=0
+if [ $INSTALL_TMUX_NVIM -eq 1 ] ; then
+    ask_question "Install Neovim C IDE configuration ?" "c_ide"
+    INSTALL_C_IDE=$?
+    ask_question "Install Neovim Python IDE configuration ?" "python_ide"
+    INSTALL_PYTHON_IDE=$?
+    ask_question "Install Neovim Rust IDE configuration ?" "rust_ide"
+    INSTALL_RUST_IDE=$?
+fi
 ask_question "Install gnome desktop environment ?" "gnome_desktop_env"
 INSTALL_GNOME_ENV=$?
 ask_question "Install additional softwares ?" "additionnal_software"
@@ -63,13 +75,18 @@ sudo mkdir -p $STATIC_FILES_DIR
 APT_REQ="git curl python3-pip"
 
 echo $PROGRESS "Updating system"
-sudo apt update && sudo apt upgrade
+sudo apt update
 
 echo $PROGRESS "Installing dependencies"
 sudo apt -y install $APT_REQ
 
 install_target $INSTALL_ALACRITTY "./install_alacritty.sh" "alacritty_term"
+
+install_target $INSTALL_C_IDE "./install_ide_c.sh" "c_ide"
+install_target $INSTALL_PYTHON_IDE "./install_ide_python.sh" "python_ide"
+install_target $INSTALL_RUST_IDE "./install_ide_rust.sh" "rust_ide"
 install_target $INSTALL_TMUX_NVIM "./install_tmux_neovim_env.sh" "tmux_and_nvim"
+
 install_target $INSTALL_GNOME_ENV "./install_gnome_env.sh" "gnome_desktop_env"
 install_target $INSTALL_ADD_SOFT "./install_gnome_env.sh" "additionnal_software"
 install_target $INSTALL_PERS_UTILITIES "./install_personnal_utilities.sh" "personnal_utilities"

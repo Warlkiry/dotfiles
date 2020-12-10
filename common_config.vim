@@ -1,33 +1,14 @@
-call plug#begin()
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-    Plug 'scrooloose/nerdtree'
-
-    Plug 'thaerkh/vim-workspace'
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-
-    " TODO Only add in Rust IDE config file
-    Plug 'majutsushi/tagbar'
-    Plug 'vim-syntastic/syntastic'
-    Plug 'rust-lang/rust.vim'
-    Plug 'sebastianmarkow/deoplete-rust'
-
-    " TODO only add in Python IDE config file
-    Plug 'davidhalter/jedi-vim'
-    Plug 'deoplete-plugins/deoplete-jedi'
-call plug#end()
-
-
-
 " GENERAL OPTIONS
 set completeopt=noinsert,menuone,noselect
 set undofile
 set shortmess+=c
+
 highlight SignColumn guibg=<X>
 set noswapfile
 if &encoding != 'utf-8'
     set encoding=utf-8              "Necessary to show Unicode glyphs
 endif
+
 set autoindent
 set smartindent
 set shiftwidth=4
@@ -45,7 +26,9 @@ set number                  " add line numbers
 let g:indentLine_setColors = 1
 let g:indentLine_color_term = 1
 let g:indentLine_char = '┊'
+
 syntax on
+
 if has("termguicolors") && has("nvim") " set true colors on NeoVim
     set termguicolors
 endif
@@ -67,6 +50,7 @@ highlight TODO guibg=NONE guifg=#dd5dc4 gui=underline,bold
 
 let g:syntastic_enable_signs = 1
 
+"TODO Custom syntax highligther theme
 "highlight SpellCap guifg=#ffc453 guibg=#000000 ctermfg=2 ctermbg=5
 
 "highlight Comment        xxx ctermfg=14 guifg=#80a0ff
@@ -153,12 +137,19 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
+
+highlight SyntasticErrorLine guifg=#ff5353 gui=bold
+highlight SyntasticErrorSign guifg=#ff5353 gui=bold
+highlight SyntasticError guifg=#ff5353 guibg=NONE gui=bold
+
+highlight SyntasticWarningSign guifg=#ffc453 gui=italic
+highlight SyntasticWarning guifg=#ffc453 guibg=NONE gui=bold
 nnoremap <leader>a :SyntasticCheck<CR>
 
 
 let g:syntastic_mode_map = {
     \ "mode": "passive",
-    \ "active_filetypes": ["python", "ruby", "php", "rust", "c", "bash", "c++"],
+    \ "active_filetypes": ["python", "ruby", "php", "rust", "c", "bash", "c++", "js", "html", "sh", "go"],
     \ "passive_filetypes": ["puppet"] }
 
 " Tagbar
@@ -168,39 +159,3 @@ nnoremap <F2> :TagbarToggle<CR>
 
 " Deoplete
 let g:deoplete#enable_at_startup = 1
-
-" Rust
-let g:deoplete#sources#rust#racer_binary='/home/john/.cargo/bin/racer'
-let g:deoplete#sources#rust#rust_source_path='/home/john/.local/rustsrc/library'
-autocmd filetype rust nmap <buffer> <leader>f <plug>DeopleteRustGoToDefinitionDefault
-autocmd filetype rust nmap <buffer> <leader>& <plug>DeopleteRustShowDocumentation
-
-" Python
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-let g:jedi#completions_enabled = 0
-"let g:jedi#use_splits_not_buffers = "right"
-
-"TODO Only init jedi if filetype is Python
-let g:jedi#auto_initialization=1
-autocmd filetype python let g:jedi#auto_initialization=1
-let g:jedi#documentation_command="<leader>&"
-
-let g:jedi#goto_command = "<leader>f"
-let g:jedi#goto_assignments_command = ""
-let g:jedi#goto_stubs_command = ""
-let g:jedi#usages_command = ""
-let g:jedi#completions_command = ""
-let g:jedi#rename_command = ""
-let g:syntastic_python_checkers = ["pylint"]
-"let g:syntastic_quiet_messages = { "type": "style" }
-let g:syntastic_python_pylint_args = '-j4 -E --enable=R1714,W0621,W0612'
-let g:jedi#show_call_signatures=0
-
-
-highlight SyntasticErrorLine guifg=#ff5353 gui=bold
-highlight SyntasticErrorSign guifg=#ff5353 gui=bold
-highlight SyntasticError guifg=#ff5353 guibg=NONE gui=bold
-
-"highlight SyntasticWarningLine guifg=#ffc453 gui=italic
-highlight SyntasticWarningSign guifg=#ffc453 gui=italic
-highlight SyntasticWarning guifg=#ffc453 guibg=NONE gui=bold
