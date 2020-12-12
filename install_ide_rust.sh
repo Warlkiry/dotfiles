@@ -21,7 +21,7 @@ if [ ! -f $(which rustfmt) ] ; then
     cargo install rustfmt-nightly
 fi
 
-RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/"
+RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/library/"
 
 echo "
 Plug 'majutsushi/tagbar'
