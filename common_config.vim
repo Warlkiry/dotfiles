@@ -96,7 +96,7 @@ nnoremap <leader>r :vsplit<CR>
 nnoremap <leader>t :wincmd o<CR>
 nnoremap <Tab> :NERDTreeToggle<CR>
 
-nnoremap <leader>é :set number!<CR>
+nnoremap <leader>" :set number!<CR>
 
 " LSP
 let g:lsp_fold_enabled = 0

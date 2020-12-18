@@ -38,6 +38,7 @@ autocmd BufRead,BufNewFile,BufEnter *.rs set filetype=rust
 
 autocmd filetype rust nmap <buffer> <leader>f <plug>DeopleteRustGoToDefinitionDefault
 autocmd filetype rust nmap <buffer> <leader>& <plug>DeopleteRustShowDocumentation
+autocmd filetype rust nmap <buffer> <leader>é :RustFmt<CR>
 let g:deoplete#sources#rust#racer_binary='$(which racer)'
 let g:deoplete#sources#rust#rust_source_path='$RUST_SRC_PATH'
 " >> ./config.vim
