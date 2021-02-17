@@ -40,4 +40,4 @@ set_theme_opt 'show-battery-percentage' 'false'
 
 gsettings set org.gnome.shell.extensions.dash-to-dock show-show-apps-button true
 cat dconf_dash_to_dock | dconf load /org/gnome/shell/extensions/dash-to-dock/
-cat custom_keybindings | dconf load /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/
+cat custom_keybindings | dconf load /org/gnome/settings-daemon/plugins/media-keys/

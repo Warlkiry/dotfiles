@@ -1,4 +1,7 @@
-[custom0]
+[/]
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']
+
+[custom-keybindings/custom0]
 binding='<Primary><Alt>Return'
 command='x-terminal-emulator'
 name='open_terminal'
