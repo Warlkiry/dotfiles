@@ -1,0 +1,4 @@
+[custom0]
+binding='<Primary><Alt>Return'
+command='x-terminal-emulator'
+name='open_terminal'
